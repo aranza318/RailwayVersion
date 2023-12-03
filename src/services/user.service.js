@@ -9,7 +9,7 @@ class UserService {
     this.cartManager = new CartManager();
   }
 
-  async registerUser({ first_name, last_name, email, age, password, role }) {
+  async registerUser({ first_name, last_name, email, age, password, role, last_connection }) {
     try {
       const cartResponse = await this.cartManager.newCart();
       console.log("Cart response:", cartResponse);
@@ -31,6 +31,7 @@ class UserService {
         password,
         role,
         cart: cartId,
+        last_connection,
       });
 
       if (user) {
@@ -47,6 +48,32 @@ class UserService {
   async restorePassword(user, hashedPassword) {
     return await this.userManager.restorePassword(user, hashedPassword);
   }
+
+ /* async swapUserRole(email, user){
+    return await this.userManager.swapUserRole(email, user);
+  }
+
+  async updateUser(userId, userToReplace){
+    return await this.userManager.updateUser(email, user);
+  }
+
+  async findByID(id){
+    return await this.userManager.findByID(id);
+  }
+
+  async findOne(email){
+    return await this.userManager.findOne(email);
+  }
+
+  async uploadFiles(userId, files, reference){
+    return await this.userManager.uploadFiles(userId, files, reference);
+  }
+
+  async changeLastConnection(email, user){
+    return await this.userManager.swapUserRole(email, user);
+  }
+
+*/
 
 }
 

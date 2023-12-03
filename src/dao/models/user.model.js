@@ -13,6 +13,18 @@ const userSchema = new mongoose.Schema({
   role: String,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
+  documents: [{
+    name:{
+      type: String,
+      unique: true,
+    },
+    reference: String,
+    status: {
+      type: String,
+      default: "Pending",
+    },
+  }],
+  last_connection: Date,
 });
 
 export const userModel = mongoose.model("users", userSchema);

@@ -6,7 +6,7 @@ const program = new Command();
 program 
        .option('-d', 'Variable for debug', false)
        .option('-p <port>', 'Server port', 9090)
-       .option('--mode <mode>', 'Option mode', 'test')
+       .option('--mode <mode>', 'Option mode', 'development')
 program.parse();
 
 console.log("Mode Option: ", program.opts().mode);

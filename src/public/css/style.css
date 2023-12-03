@@ -272,3 +272,52 @@
     margin: 16px 0;
     font-size: 16px;
   }
+
+  #uploadForm{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 50px;
+    background-color:#a419b1;
+    padding: 5%;
+  }
+  
+  #uploadForm input{
+    width: 100%;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid rgb(227, 31, 139);
+    margin: 10px 0;
+    color: black;
+    font-size: .8em;
+    font-weight: 500;
+    box-sizing: border-box;
+    padding-left: 30px;
+  }
+  
+  #uploadPremiumForm{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 50px;
+    background-color:#a419b1;
+    padding: 5%;
+  }
+  
+  #uploadPremiumForm input{
+    width: 100%;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid rgb(227, 31, 139);
+    margin: 10px 0;
+    color: black;
+    font-size: .8em;
+    font-weight: 500;
+    box-sizing: border-box;
+    padding-left: 30px;
+  }
+

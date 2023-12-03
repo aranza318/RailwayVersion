@@ -3,6 +3,8 @@ import ProductManager from "../dao/ProductManager.js";
 import CartManager from "../dao/cartManager.js";
 import cartController from "../controllers/cart.controller.js";
 import { userModel } from "../dao/models/user.model.js";
+import { passportCall } from "../midsIngreso/passAuth.js";
+
 
 const checkSession = (req, res, next) => {
   req.logger.info('Checking session:', req.session);
@@ -106,12 +108,25 @@ viewsRouter.get("/profile", checkSession, (req, res) => {
   const userData = req.session.user;
   req.logger.info('User data:', userData);
 
-  res.render("profile", { user: userData });
+  res.render("profile", { user: userData, userId: userData.id });
 });
 
 viewsRouter.get("/restore", async (req, res) => {
   res.render("restore");
 });
+
+viewsRouter.get("/upload/:uid", (req, res) => {
+  const userId = req.params.uid;
+  console.log("ID de usuario: ", userId);
+  res.render("uploads", {userId});
+});
+
+viewsRouter.get('/premium/:uid', (req, res) => {
+  const userId = req.params.uid;
+  console.log("ID de usuario: ", userId);
+  res.render("premium", {userId});
+});
+
 
 viewsRouter.get('/reset-password/:token', async (req, res) => {
   const { token } = req.params;

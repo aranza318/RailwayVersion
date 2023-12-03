@@ -3,7 +3,7 @@ import { createHash, isValidPassword } from "../midsIngreso/bcrypt.js";
 
 
 class UserManager {
-  async addUser({ first_name, last_name, email, age, password, role, cart}) {
+  async addUser({ first_name, last_name, email, age, password, role, cart, last_connection}) {
     try {
       const existingUser = await userModel.findOne({ email });
 
@@ -20,7 +20,8 @@ class UserManager {
         age,
         password: hashedPassword,
         role,
-        cart
+        cart,
+        last_connection: new Date(),
       });
 
       console.log("User added!", user);
