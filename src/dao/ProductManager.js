@@ -1,5 +1,7 @@
-
+import { transporter } from "../controllers/messages.controller.js";
 import { productModel } from "./models/product.model.js";
+import { userModel } from "./models/user.model.js";
+import { ADMIN_EMAIL } from "../config/configs.js";
 
 class ProductManager {
   async addProduct(product) {
@@ -57,6 +59,34 @@ class ProductManager {
   async deleteProduct(id) {
     try {
         const deletedProduct = await productModel.findByIdAndDelete(id);
+        
+        const owner = deletedProduct.owner;
+        const thisOwner = await userModel.findOne(owner);
+        console.log(thisOwner);
+        const ownerEmail = thisOwner.email;
+        const existProductOwner =  thisOwner;  
+        console.log("Product owner", deletedProduct.owner);
+        console.log("Datos Owner: ", existProductOwner);
+        console.log("Correo del propietario: ", ownerEmail);
+       
+        if (existProductOwner) {
+          console.log("Enviando aviso a owner: ", thisOwner);
+          const email = ownerEmail;
+  
+          const result = transporter.sendMail({
+            from: ADMIN_EMAIL,
+            to: email,
+            subject: `Okuna informa: Tu producto ${deletedProduct.title} a sido borrado`,
+            html: `<div style="display: flex; flex-direction: column; justify-content: center;  align-items: center;">
+            Hola &nbsp;${thisOwner.first_name}!\nTe informamos que tu producto ${deletedProduct.title} ha sido borrado por la administracion de la pagina.\nSaludos.
+            </div>`,
+          });
+          if (result.status === 'rejected') {
+            logger.error(`El correo electrónico a ${email} fue rechazado`);
+          }
+          
+        }
+    
         if (deletedProduct) {
             console.log('Producto eliminado correctamente:', deletedProduct);
             return true;
@@ -89,13 +119,13 @@ class ProductManager {
       });
       let status = products ? "success" : "error";
       let prevLink = products.hasPrevPage
-        ? "http://localhost:8000/products?limit=" +
+        ? "http://localhost:8080/products?limit=" +
           limit +
           "&page=" +
           products.prevPage
         : null;
       let nextLink = products.hasNextPage
-        ? "http://localhost:8000/products?limit=" +
+        ? "http://localhost:8080/products?limit=" +
           limit +
           "&page=" +
           products.nextPage

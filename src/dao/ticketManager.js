@@ -24,4 +24,21 @@ export default class TicketManager {
             console.log(error);
         }
     }
+
+    async getTicketByCode(code) {
+        return await ticketModel.findOne(code).lean();
+    };
+
+    async getTicketByCartCode(code) {
+        return await this.cartController.ticketModel.findOne(code).lean();
+    };
+
+    async createTicket(ticket) {
+        const newTicket = await ticketModel.create(ticket);
+        return newTicket;
+    };
+
+    async getTicketById(tid) {
+        return await ticketModel.findById(tid).lean();
+    };
 }

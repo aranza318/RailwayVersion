@@ -1,8 +1,12 @@
 import ProductManager from "../dao/ProductManager.js";
 import { cartModel } from "../dao/models/cart.model.js";
 import CartServices from "../services/cart.service.js";
-import ticketController from "./ticket.controller.js";
+import TicketController from "./ticket.controller.js";
 import { v4 as uuidv4 } from "uuid";
+import { transporter } from "./messages.controller.js";
+import { ADMIN_EMAIL } from "../config/configs.js";
+
+const ticketController = new TicketController();
 
 class CartController {
   constructor() {
@@ -177,12 +181,42 @@ class CartController {
       const ticketCreated = await ticketController.createTicket({
         body: ticketData,
       });
-      res.json({
+      
+     
+      const ticketCode = ticketData.code;
+      console.log(ticketCode);
+
+      const ticketOwner = ticketData.purchaser;
+      console.log(ticketOwner);
+     
+      if (ticketCode) {
+        console.log("Enviando aviso a owner: ", ticketOwner);
+        const email = ticketOwner;
+
+        const result = transporter.sendMail({
+          from: ADMIN_EMAIL,
+          to: email,
+          subject: `Okuna te agradece tu compra, aqui el ticket`,
+          html: `<div style="display: flex; flex-direction: column; justify-content: center;  align-items: center;">
+          Hola gracias por confiar en Okuna para tu salud!
+          <br>
+          <br>
+          Te traemos los datos de tu ticket de compra: <br> <br>
+          Monto:\n${ticketData.amount}\n <br> <br>
+          Codigo del ticket:\n${ticketData.code}\n <br> <br>
+          Hora de la compra:\n${ticketData.purchase_datetime}\n <br> <br>
+          Saludos y gracias nuevamente.
+          </div>`,
+        });
+      }
+
+    res.json({
         status: "success",
         message: "Compra realizada con éxito",
         ticket: ticketCreated,
         failedProducts: failedProducts.length > 0 ? failedProducts : undefined,
       });
+
     } catch (error) {
       req.logger.error("Error específico al crear el ticket de compra:", error);
       res.status(500).json({ error: "Error al crear el ticket de compra" });

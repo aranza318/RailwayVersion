@@ -29,7 +29,18 @@ const agregarProductoAlCarrito = async (pid) => {
     const response = await fetch(`/api/carts/${cid}/products/${pid}`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
-    });
+    }).then(response => {
+      if (response.ok) {
+          Swal.fire({
+          icon: "success",
+          title: "Producto Agregado Correctamente",
+          text: `Revisa tu carrito 🛒`
+      });
+          return res.json();
+      } else {
+          throw new Error('Something went wrong');
+      }
+  });
 
     if (!response.ok) {
       console.log("Error al agregar el producto al carrito");
@@ -55,15 +66,32 @@ async function realizarCompra() {
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    }).then(response => {
+      if (response.ok) {
+          Swal.fire({
+              icon: "success",
+              title: "Compra realizada con exito",
+              text: "Revisa tu Correo Electronico para ver el detalle de tu compra. Ya no debes hacer nada mas puedes ir a seguir navegando y el carrito se renovara automaticamente para que puedas seguir comprando si asi lo deseas. Muchas gracias."
+          });
+          return res.json();
+      } else {
+          throw new Error('Failed to purchase cart.');
+      }
+  }).then(data => {
+    console.log(data)
+    const ticketCode = data.ticket._id;
+    window.location.href = `/tickets/${ticketCode}`;
+  })
  
     if (!response.ok) {
       console.error("Error al realizar la compra");
       return;
     }
     
+    
     console.log("Compra realizada con éxito"); 
-
+    
+   
   } catch (error) {
     console.error("Error al realizar la compra", error);
   }

@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import { GMAIL_PASSWORD, GMAIL_USER } from "../config/configs.js";
 import __dirname from "../../utils.js";
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
   service: "gmail",
   port: 587,
   auth: {
@@ -18,7 +18,7 @@ transporter.verify(function (error, success) {
   if (error) {
     console.log(error);
   } else {
-    console.log("Server is ready to take our messages");
+    console.log("Servidor listo para tomar nuestros mensajes.");
   }
 });
 
@@ -28,6 +28,16 @@ const mailOptions = {
   subject: "Correo de prueba Coderhouse Programacion Backend.",
   html: "<div><h1>Esto es un Test de envio de correos con Nodemailer!</h1></div>",
   attachments: [],
+};
+
+const mailOptionsDelete = (reciver, title, message) => {
+  return{
+    from: "Okuna " + GMAIL_USER,
+    to: reciver,
+    subject: title ? title : "Correo para usuarios eliminados.",
+    html: message ? message : "<div><h1>Se elimino tu cuenta por inactividad</h1></div>",
+    attachments: [],
+  }
 };
 
 const mailOptionsWithAttachments = {
@@ -64,7 +74,7 @@ export const sendEmail = (req, res) => {
       .status(500)
       .send({
         error: error,
-        message: "No se pudo enviar el email desde:" + config.gmailAccount,
+        message: "No se pudo enviar el email desde:" + GMAIL_USER,
       });
   }
 };
@@ -88,8 +98,32 @@ export const sendEmailWithAttachments = (req, res) => {
       .status(500)
       .send({
         error: error,
-        message: "No se pudo enviar el email desde:" + config.gmailAccount,
+        message: "No se pudo enviar el email desde:" + GMAIL_USER,
       });
   }
 };
 
+export const sendEmailForDeletedUsers = (email, message, title, callback) => {
+  let finalEmail = email ? email : GMAIL_USER;
+  try {
+    let result = transporter.sendMail(mailOptionsDelete(finalEmail, title, message), (error, info) => {
+      if (error) {
+        function doSomething(callback) {
+          callback({
+              message: "Error",
+              payload: error,
+              code: 400
+          });
+        }
+        function myCallback() {
+          console.log("El callback se ejecutó.");
+        }
+        doSomething(myCallback);
+      } else {
+        callback (null, { message: "Success!", payload: info })
+    }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

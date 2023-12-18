@@ -27,9 +27,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/profile">Tu perfil</a>
                      </li>
-                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/upload/{{userId}}">Premium</a>
-                     </li>
+                      <li class="nav-item">
+                        <a class="nav-link text-white" href="/usermanagment">Manager de usuarios</a>
+                     </li>  
                      <li>
                         <button id="cartButton">🛒</button>
                      </li>
@@ -38,7 +38,7 @@
  <div class="container">
     <div class="row">
         <div class="user">
-            <p class="color1">Bienvenido, {{user.role}}:{{user.first_name}} {{user.last_name}}!</p>
+            <p class="color1">Bienvenido, {{user.role}}:{{user.first_name}}!</p>
         </div>
         {{#each products.payload}}
              <article class="container col-md-4">

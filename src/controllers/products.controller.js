@@ -3,6 +3,8 @@ import { socketServer } from "../../app.js";
 import mongoose from "mongoose";
 import CustomeError from "../services/errors/customeError.js";
 import { productError } from "../services/errors/errorMessages/product.error.js";
+import { transporter } from "./messages.controller.js";
+import { userModel } from "../dao/models/user.model.js";
 
 class ProductController {
   constructor() {
@@ -64,8 +66,8 @@ class ProductController {
       category,
       thumbnail,
     } = req.body;
-    req.logger.info("Received thumbnail:", thumbnail);
-    const owner = req.user_id;
+   
+    const owner = req.user._id;
     if (!title) {
       res.status(400).send({
         status: "error",
@@ -233,9 +235,8 @@ class ProductController {
 
       const product = await this.productService.getProductById(pid);
 
-      console.log("user", req.user);
-      console.log("product owner", product.owner);
-
+      
+      
       if (!product) {
         console.log("Producto no encontrado");
         res.status(404).send({
@@ -261,6 +262,8 @@ class ProductController {
         });
         return;
       }
+
+    
 
       const wasDeleted = await this.productService.deleteProduct(pid);
 

@@ -111,7 +111,7 @@ socketServer.on("connection", async (socket) => {
   console.log("Un cliente se ha conectado");
 
   const allProducts = await PM.getProducts();
-  socket.emit("initial_products", allProducts);
+  socket.emit("initial_products", allProducts.payload);
 
   socket.on("addProduct", async(obj)=>{
     await PM.addProduct(obj);

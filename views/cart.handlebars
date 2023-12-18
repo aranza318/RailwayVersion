@@ -26,9 +26,6 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/profile">Tu perfil</a>
                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link text-white" href="/upload/{{userId}}">Premium</a>
-                     </li>
                      <li>
                         <button id="cartButton">🛒</button>
                      </li>
@@ -58,6 +55,79 @@
   </div>
 </div>
 </div>
+<script>
+    function purchaseCart() {
+  
+        fetch(`/api/carts/${cid}/purchase`, {
+            method: 'POST',
+            headers: {   "Content-Type": "application/json", }
+        })
+            .then(res => {
+                if (res.ok) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Purchase completed",
+                        text: "Purchase completed"
+                    });
+                    return res.json();
+                } else {
+                    throw new Error('Failed to purchase cart.');
+                }
+            })
+            .then(data => {
+                console.log(data)
+                const ticketCode = data.ticket._id;
+                window.location.href = `/tickets/${ticketCode}`;
+            })
+            .catch(err => {
+                console.error(err);
+        Swal.fire({
+            icon: "error",
+            text: `Cart purchase cannot be completed.`
+        });
+    });
+}
+function realizarCompras() {
+  const cid = await obtenerIdCarrito();
+  
+    if (!cid) {
+      console.error("Carrito no encontrado");
+      return;
+    }
+  fetch(`/api/carts/${cid}/purchase`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }) .then(res => {
+                if (res.ok) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Compra completa",
+                        text: "Revisa tu Email para ver los datos de tu ticket"
+                    });
+                    return res.json();
+                } else {
+                    throw new Error('Failed to purchase cart.');
+                }
+            })
+            .then(data => {
+                console.log(data)
+                const ticketCode = data.ticket._id;
+                window.location.href = `/tickets/${ticketCode}`;
+            })
+            .catch(err => {
+                console.error(err);
+        Swal.fire({
+            icon: "error",
+            text: `Cart purchase cannot be completed.`
+        });
+    });
+
+
+}
+</script>
 </body>
 <script src="../src/public/cart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </html>

@@ -3,7 +3,9 @@ import ProductManager from "../dao/ProductManager.js";
 import CartManager from "../dao/cartManager.js";
 import cartController from "../controllers/cart.controller.js";
 import { userModel } from "../dao/models/user.model.js";
-import { passportCall } from "../midsIngreso/passAuth.js";
+import { passportCall, authorization } from "../midsIngreso/passAuth.js";
+import UserController from "../controllers/user.controller.js";
+import TicketController from "../controllers/ticket.controller.js";
 
 
 const checkSession = (req, res, next) => {
@@ -30,6 +32,8 @@ const checkAlreadyLoggedIn = (req, res, next) => {
 const viewsRouter = express.Router();
 const PM = new ProductManager();
 const CM = new CartManager();
+const userController = new UserController();
+const ticketController = new TicketController();
 
 async function loadUserCart(req, res, next) {
   if (req.session && req.session.user) {
@@ -84,6 +88,11 @@ viewsRouter.get("/carts", loadUserCart, async (req, res) => {
 viewsRouter.post("/carts/:cid/purchase", async (req, res) => {
   const cid = req.params.cid;
   cartController.getPurchase(req, res, cid);
+});
+
+viewsRouter.get("/tickets/:code", async (req, res) => {
+  const code = req.params.code;
+  cartController.getPurchase(req, res, code);
 });
 
 viewsRouter.get("/realtimeproducts", (req, res) => {
@@ -154,4 +163,9 @@ viewsRouter.get("/failregister", async (req, res) => {
     message: "Error! No se pudo registar el Usuario!",
   });
 });
+
+viewsRouter.get("/usermanagment", passportCall("jwt"), authorization(['admin']), userController.getUserManagment.bind(userController));
+
+viewsRouter.get('/tickets/:code', passportCall('jwt'), ticketController.getTicketDetail.bind(ticketController));
+viewsRouter.get('/tickets/:code', passportCall('jwt'), ticketController.getTicketDetail.bind(ticketController));
 export default viewsRouter;

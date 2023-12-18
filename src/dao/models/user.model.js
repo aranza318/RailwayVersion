@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
   first_name: String,
   last_name: String,
   email: {
@@ -16,7 +17,6 @@ const userSchema = new mongoose.Schema({
   documents: [{
     name:{
       type: String,
-      unique: true,
     },
     reference: String,
     status: {
