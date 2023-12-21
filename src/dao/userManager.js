@@ -109,17 +109,7 @@ class UserManager {
 
 }
 
-  async searchLastConnection(days){
-    try {
-      const usersLastConnection = await userModel.findOne({last_connection: { $lt: new Date(Date.now() - (days * 24 * 60 * 60 * 1000)) }});
-      await userModel.deleteMany({ last_connection: { $lt: new Date(Date.now() - (days * 24 * 60 * 60 * 1000)) } });
-      const inactiveUsersDTO = usersLastConnection.map(user => new GetUserDTO(user));
-      return inactiveUsersDTO;
-    } catch (error) {
-      console.error('Error al encontrar la ultima conexion:', error);
-      return false;
-    }
-  } 
+
 
   async updateUser(userId, userToReplace) {
     const filter = { email: userId }

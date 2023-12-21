@@ -33,6 +33,7 @@
                  </ul>
             </div>
 <div class="container">
+   <h2 class="color1">GRACIAS POR TU COMPRA! REVISA TU CORREO ELECTRONICO TAMBIEN RECIBIRAS UN MAIL CON ESTE RESUMEN</h2>
     <div class="alert alert-dark m-2" role="alert">
          <strong>Codigo del Ticket: {{ticket._id}}</strong>
          <br>
@@ -40,37 +41,11 @@
          <br>
          Monto: <code>{{ticket.amount}}</code> 
          <br>
+         Codigo: {{ticket.code}}
+         <br>
+         Comprador: {{ticket.purchaser}}
+         <br>
     </div>
-    {{#each ticket.products}}
-    <div class="accordion m-2" id="accordionPannelsStayOpen{{product._id}}">
-        <div class="accordion-item">
-             <h2  class="accordion-header" id="panelsStayOpen-h{{product._id}}">
-                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                 data-bs-target="panelsStayOpen-{{product._id}}" aria-expanded="true" aria-controls="panelsStayOpen-{{product._id}}">
-                 <strong>ID del Producto: {{product._id}} | {{product.title}} | Cantidad: {{quantity}}</strong>
-                 </button>
-             </h2>
-             <div id="panelsStayOpen-{{product._id}}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-h{{product._id}}">
-               <div class="accordion-body">
-                  <strong>ID del Producto: {{product._id}}</strong>
-                  <br>
-                  <strong>Producto:{{product.title}} </strong>
-                  <br>
-                  <strong> Cantidad: {{quantity}}</strong>
-                  <br>
-                  Descripcion: {{product.description}}
-                  <br>
-                  Precio: {{product.price}}
-                  <br>
-                  Stock: {{product.stock}}
-                  <br>
-                  Categoria: {{product.category}}
-                  <br>
-               </div>
-             </div>
-        </div>
-    </div>
-    {{/each}}
     </div>
 </div>
 

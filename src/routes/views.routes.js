@@ -5,7 +5,7 @@ import cartController from "../controllers/cart.controller.js";
 import { userModel } from "../dao/models/user.model.js";
 import { passportCall, authorization } from "../midsIngreso/passAuth.js";
 import UserController from "../controllers/user.controller.js";
-import TicketController from "../controllers/ticket.controller.js";
+import ticketController from "../controllers/ticket.controller.js";
 
 
 const checkSession = (req, res, next) => {
@@ -33,7 +33,7 @@ const viewsRouter = express.Router();
 const PM = new ProductManager();
 const CM = new CartManager();
 const userController = new UserController();
-const ticketController = new TicketController();
+
 
 async function loadUserCart(req, res, next) {
   if (req.session && req.session.user) {
@@ -166,6 +166,18 @@ viewsRouter.get("/failregister", async (req, res) => {
 
 viewsRouter.get("/usermanagment", passportCall("jwt"), authorization(['admin']), userController.getUserManagment.bind(userController));
 
-viewsRouter.get('/tickets/:code', passportCall('jwt'), ticketController.getTicketDetail.bind(ticketController));
-viewsRouter.get('/tickets/:code', passportCall('jwt'), ticketController.getTicketDetail.bind(ticketController));
+viewsRouter.get("/ticket-detail/:ticketId", async(req, res) =>{
+  const ticketId = req.params.ticketId;
+  try {
+    const ticket = await ticketController.getTicketDetail(ticketId);
+    if(ticket){
+      res.render("ticketDetail", {ticket});
+    } else {
+      res.status(404).send("No se ha encontrado el ticket");
+    }
+  } catch (error) {
+    console.error("Error al traer el ticket: ", error);
+    res.status(500).send("Error interno");
+  }
+})
 export default viewsRouter;

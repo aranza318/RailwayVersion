@@ -71,16 +71,12 @@ async function realizarCompra() {
           Swal.fire({
               icon: "success",
               title: "Compra realizada con exito",
-              text: "Revisa tu Correo Electronico para ver el detalle de tu compra. Ya no debes hacer nada mas puedes ir a seguir navegando y el carrito se renovara automaticamente para que puedas seguir comprando si asi lo deseas. Muchas gracias."
+              text: "Revisa tu Correo Electronico para ver el detalle de tu compra. Muchas gracias."
           });
           return res.json();
       } else {
           throw new Error('Failed to purchase cart.');
       }
-  }).then(data => {
-    console.log(data)
-    const ticketCode = data.ticket._id;
-    window.location.href = `/tickets/${ticketCode}`;
   })
  
     if (!response.ok) {
@@ -118,3 +114,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+const eliminarProductoDelCarrito = async (pid) => {
+  try {
+    const cid = await obtenerIdCarrito();
+
+    const response = await fetch(`/api/carts/${cid}/products/${pid}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    }).then(response =>{ 
+      if (response.ok) {
+      Swal.fire({
+          icon: "success",
+          title: "Producto eliminado con exito",
+          text: "Refresca la pagina para ver tu nuevo reumen de productos. Muchas gracias."
+      });
+      return res.json();
+  } else {
+      throw new Error('Fallo al borrar el producto del carrito');
+  }
+
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el producto del carrito.");
+    }
+
+    console.log("Producto eliminado del carrito con éxito.");
+  } catch (error) {
+    console.error("Error al eliminar el producto del carrito: " + error);
+  }
+};

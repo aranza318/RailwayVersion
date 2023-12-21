@@ -36,7 +36,7 @@ export const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID
 export const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN
 export const PREMIUM_EMAIL = process.env.PREMIUM_EMAIL
 export const PREMIUM_PASSWORD = process.env.PREMIUM_PASSWORD
-export const GET_INACTIVE_USERS_DAYS = process.env.GET_INACTIVE_USERS_DAYS
+export const STRIPE_KEY = process.env.STRIPE_KEY
 
 export default{
        environment: environment

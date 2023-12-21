@@ -1,47 +1,45 @@
 import TicketService from "../services/tickets.service.js";
-import UserService from "../services/user.service.js";
 
-export default class TicketController {
+
+class TicketController {
   constructor() {
     this.ticketService = new TicketService();
-    this.userService = new UserService();
   }
 
- async createTicket(req) {
+ async createTicket(ticketData) {
+    if(!ticketData){
+        console.error('Datos del ticket en falta');
+        throw new Error('Datos del ticket en falta');
+    }
     try {
-
-        const data = req.body;
-        const ticket = await this.ticketService.createTicket(data);
-        if (ticket) {
-            console.log(ticket);
-            const thisTicket = ticket.code;
-            console.log(thisTicket);
-
-        } 
-       //
         
-        //return res.status(200).json({ status: "success", redirect: `/tickets/${thisTicket}` });
+        const ticket = await this.ticketService.createTicket(ticketData);
+        if (ticket) {
+            return ticket;
+        } else {
+            throw new Error('Error creando el ticket')
+        }
+
     } catch (error) {
-       console.log(error);  
+       console.log('Error al crear el ticket: ', error);  
     }
     }
      
-    async getTicketDetail (req, res){
-        let {code} = req.params;
-        let user = await this.userService.findOne(req.user.email);
+    async getTicketDetail (ticketId){
+    
         try {
-            let ticket = await this.ticketService.getTicketByOnlyCode(code);
-            console.log("Ticket");
-            console.log(ticket);
-            if(ticket === null){
-                res.render('error', {error: `404 - El ticket solicitado no existe.`, user})
-            } else {
-                res.render('ticketDetail', {ticket, user})
-            }
+            const ticket = await this.ticketService.getTicketById(ticketId);
+           
+            if(!ticket){
+                throw new Error ("No se encontro el ticket");
+            } 
+            return ticket;
         } catch (error) {
-            res.render('error', {error: `404 - El ticket solicitado no se encuentra disponible`, user})            
+            console.error("El ticket solicitado no se encuentra disponible");
+            throw error;           
         }
     }
 
 
 }
+export default new TicketController();

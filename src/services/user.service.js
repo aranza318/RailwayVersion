@@ -1,7 +1,6 @@
 import UserManager from "../dao/userManager.js";
 import { ADMIN_EMAIL, ADMIN_PASSWORD, PREMIUM_EMAIL, PREMIUM_PASSWORD } from "../config/configs.js";
 import CartManager from "../dao/cartManager.js";
-import { GET_INACTIVE_USERS_DAYS } from "../config/configs.js";
 import { sendEmailForDeletedUsers } from "../controllers/messages.controller.js";
 import EmailService from "./emailservice.js";
 import { userModel } from "../dao/models/user.model.js";
@@ -87,30 +86,6 @@ class UserService {
       next(error);
   }
 };
-  
-
-  async deleteInactiveUsers(){
-    try {
-      const days = GET_INACTIVE_USERS_DAYS;
-      const usersDeleted = await this.userManager.searchLastConnection(days);
-      usersDeleted.forEach(async (user) => {
-        const title = "Notificacion de eliminacion de cuenta por inactividad"
-        const message = `Hola ${user.first_name} \nTe informamos que tu cuenta a sido dada de baja por inactividad. \nPedimos disculpas por los inconvenientes. \nSaludos.`
-        await emailService.sendEmail(user.email, message, title, (error, result)=>{
-          if(error){
-            throw{
-              error:result.error,
-              message: result.message,
-            }
-          }
-        })
-      });  
-      return usersDeleted;
-    } catch (error) {
-      log.logger.warn(`Error al eliminar usuarios inactivos: ${error.message}`);
-      next(error);
-    }
-  }
 
   async updateUser(userId, userToReplace) {
 

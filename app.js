@@ -12,6 +12,7 @@ import smsRouter from "./src/routes/sms.router.js";
 import mockingRouter from "./src/moking/mock.router.js";
 import logRouter from "./src/routes/log.routes.js";
 import userRouter from "./src/routes/users.routes.js";
+import paymentRouter from "./src/routes/payments.routes.js";
 import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -92,7 +93,8 @@ app.use("/api/sms", smsRouter);
 app.use("/api/users", userRouter)
 app.use('/mockingproducts', mockingRouter);
 app.use("/", viewsRouter);
-app.use('/loggerTest', logRouter)
+app.use('/loggerTest', logRouter);
+app.use("/payment", paymentRouter);
 
 
 //Managers

@@ -9,8 +9,8 @@ const ticketSchema = new mongoose.Schema({
     },
     purchase_datetime:{
         type: Date,
+        required: true,
         default: Date.now,
-        required: true
     },
     amount: {
         type: Number,
@@ -18,8 +18,8 @@ const ticketSchema = new mongoose.Schema({
     },
     purchaser:{
         type: String,
+        required: true,
         ref: "users",
-        required: true
     }
 })
 

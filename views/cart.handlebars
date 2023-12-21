@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="../src/public/cart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
      <div class="row-md-4 d-flex align-items-center justify-content-center">
@@ -44,11 +47,14 @@
               - ${{this.product.price}}
               - Cantidad:
               {{this.quantity}}
+              <button class="btn-delete-cart" onclick="eliminarProductoDelCarrito('{{this.product._id}}')">Eliminar</button>
             </li>
           {{/each}}
         </ul>
-        <div class="color1">
-        <button onclick="realizarCompra()" class="botons">Realizar Compra</button>
+       
+        <div class="color1"> 
+          <button id="payment" class="botons">Pagar</button>
+        
         </div>
       </table>
     </div>
@@ -56,76 +62,29 @@
 </div>
 </div>
 <script>
-    function purchaseCart() {
-  
-        fetch(`/api/carts/${cid}/purchase`, {
-            method: 'POST',
-            headers: {   "Content-Type": "application/json", }
-        })
-            .then(res => {
-                if (res.ok) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Purchase completed",
-                        text: "Purchase completed"
-                    });
-                    return res.json();
-                } else {
-                    throw new Error('Failed to purchase cart.');
-                }
-            })
-            .then(data => {
-                console.log(data)
-                const ticketCode = data.ticket._id;
-                window.location.href = `/tickets/${ticketCode}`;
-            })
-            .catch(err => {
-                console.error(err);
-        Swal.fire({
-            icon: "error",
-            text: `Cart purchase cannot be completed.`
+   document.addEventListener("DOMContentLoaded", ()=>{
+    const paymentButton = document.getElementById("payment");
+    if(paymentButton){
+      paymentButton.addEventListener("click", async ()=>{
+        const cartId = await obtenerIdCarrito();
+        if(!cartId){
+          console.error("ID incorrecto");
+          return
+        }
+        const response = await fetch("/payment/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify({cartId:cartId})
         });
-    });
-}
-function realizarCompras() {
-  const cid = await obtenerIdCarrito();
-  
-    if (!cid) {
-      console.error("Carrito no encontrado");
-      return;
+        const data = await response.json();
+        if(response.ok){
+          window.location.href=data.url;
+        } else {
+          console.error("Error al iniciar la sesion de pago.");
+        }
+      });
     }
-  fetch(`/api/carts/${cid}/purchase`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }) .then(res => {
-                if (res.ok) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Compra completa",
-                        text: "Revisa tu Email para ver los datos de tu ticket"
-                    });
-                    return res.json();
-                } else {
-                    throw new Error('Failed to purchase cart.');
-                }
-            })
-            .then(data => {
-                console.log(data)
-                const ticketCode = data.ticket._id;
-                window.location.href = `/tickets/${ticketCode}`;
-            })
-            .catch(err => {
-                console.error(err);
-        Swal.fire({
-            icon: "error",
-            text: `Cart purchase cannot be completed.`
-        });
-    });
-
-
-}
+   });
 </script>
 </body>
 <script src="../src/public/cart.js"></script>
