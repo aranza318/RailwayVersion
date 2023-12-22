@@ -5,7 +5,7 @@
   "description": "",
   "main": "ProductManager.js",
   "scripts": {
-    "start": "npm run dev",
+    "start": "node app.js",
     "dev": "nodemon app.js"
   },
   "author": "",
