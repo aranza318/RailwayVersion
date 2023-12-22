@@ -4,10 +4,9 @@ import { Command } from "commander";
 const program = new Command();
 
 program 
-       .option('-d', 'Variable for debug', false)
        .option('-p <port>', 'Server port', 9090)
        .option('--mode <mode>', 'Option mode', 'development')
-program.parse(process.argv);
+       .parse(process.argv);
 
 console.log("Mode Option: ", program.opts().mode);
 
