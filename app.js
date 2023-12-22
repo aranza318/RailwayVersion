@@ -3,6 +3,7 @@ import Handlebars from "handlebars";
 import expressHandlebars from "express-handlebars";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
+import mongoose from "mongoose";
 import cartsRouter from "./src/routes/cart.routes.js";
 import productsRouter from "./src/routes/product.routes.js";
 import serviceRouter from "./src/routes/sessions.routes.js";
@@ -23,12 +24,27 @@ import passport from "passport";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { MONGODB_CNX_STR, PORT, SECRET_SESSIONS} from "./src/config/configs.js"
-import "./src/dao/dbConfig.js"
+//import "./src/dao/dbConfig.js"
 import { addLogger, devLogger } from "./src/config/logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUIExpress from "swagger-ui-express";
 
 const app = express();
+
+const port = PORT || 8080;
+const httpServer = app.listen(port, () => {devLogger.info(`conectado a ${port}`)});
+
+const mongoUrl = MONGODB_CNX_STR;
+mongoose.connect(mongoUrl,{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS:20000,
+})
+.then(()=> console.log('Conectado a la Base de Datos MongoDB'))
+.catch(err => console.error('Error al conectar con MongoDB'))
+
+//Server
+export const socketServer = new Server(httpServer);
 
 const swaggerOptions = {
   definition:{
@@ -43,9 +59,7 @@ const swaggerOptions = {
 }
 
 const specs =  swaggerJSDoc(swaggerOptions)
-//Server
-const httpServer = app.listen(PORT, () => {devLogger.info(`conectado a ${PORT}`)})
-export const socketServer = new Server(httpServer);
+
 
 //Socket Server
 app.set("socketServer", socketServer);
@@ -105,6 +119,7 @@ import MessagesManager from "./src/dao/messagesmanager.js";
 const MM = new MessagesManager();
 
 import CartManager from "./src/dao/cartManager.js";
+import { error } from "winston";
 const CM = new CartManager();
 
 
