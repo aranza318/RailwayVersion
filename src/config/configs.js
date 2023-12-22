@@ -5,7 +5,7 @@ const program = new Command();
 
 program 
        .option('-p <port>', 'Server port', 9090)
-       .option('--mode <mode>', 'Option mode', 'development')
+       .option('--mode <mode>', 'Option mode', 'production')
        .parse(process.argv);
 
 console.log("Mode Option: ", program.opts().mode);
