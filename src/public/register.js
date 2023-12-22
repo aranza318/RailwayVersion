@@ -5,6 +5,7 @@ const registerUser = async () => {
     let age = document.getElementById("age").value;
     let password = document.getElementById("password").value;
   
+    
     const user = { first_name, last_name, email, age, password };
   
     try {
