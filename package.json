@@ -5,8 +5,8 @@
   "description": "",
   "main": "ProductManager.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node app.js"
+    
   },
   "author": "",
   "license": "ISC",
