@@ -5,8 +5,8 @@
   "description": "",
   "main": "ProductManager.js",
   "scripts": {
-    "start": "node app.js"
-    
+    "start": "npm run dev",
+    "dev": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +28,7 @@
     "mongoose-paginate-v2": "^1.7.31",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.7",
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
@@ -41,7 +42,8 @@
     "swagger-ui-express": "^5.0.0",
     "twilio": "^4.19.0",
     "uuid": "^9.0.1",
-    "winston": "^3.11.0"
+    "winston": "^3.11.0",
+    "winston-transport": "^4.6.0"
   },
   "devDependencies": {
     "artillery": "^2.0.0-38",
